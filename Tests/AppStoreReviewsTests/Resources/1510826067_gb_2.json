@@ -1,0 +1,7 @@
+{"feed":{"author":{"name":{"label":"iTunes Store"}, "uri":{"label":"http://www.apple.com/uk/itunes/"}}, "updated":{"label":"2021-01-30T09:25:47-07:00"}, "rights":{"label":"Copyright 2008 Apple Inc."}, "title":{"label":"iTunes Store: Customer Reviews"}, "icon":{"label":"http://itunes.apple.com/favicon.ico"}, "link":[
+{"attributes":{"rel":"alternate", "type":"text/html", "href":"https://music.apple.com/WebObjects/MZStore.woa/wa/viewGrouping?cc=gb&id=130"}}, 
+{"attributes":{"rel":"self", "href":"https://itunes.apple.com/rss/customerreviews/page=2/id=1510826067/sortby=mostrecent/json?l=en&cc=gb"}}, 
+{"attributes":{"rel":"first", "href":"https://itunes.apple.com/gb/rss/customerreviews/page=1/id=1510826067/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=2/id=1510826067/sortby=mostrecent/json"}}, 
+{"attributes":{"rel":"last", "href":"https://itunes.apple.com/gb/rss/customerreviews/page=1/id=1510826067/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=2/id=1510826067/sortby=mostrecent/json"}}, 
+{"attributes":{"rel":"previous", "href":"https://itunes.apple.com/gb/rss/customerreviews/page=1/id=1510826067/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=2/id=1510826067/sortby=mostrecent/json"}}, 
+{"attributes":{"rel":"next", "href":"https://itunes.apple.com/gb/rss/customerreviews/page=3/id=1510826067/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=2/id=1510826067/sortby=mostrecent/json"}}], "id":{"label":"https://itunes.apple.com/rss/customerreviews/page=2/id=1510826067/sortby=mostrecent/json?l=en&cc=gb"}}}
