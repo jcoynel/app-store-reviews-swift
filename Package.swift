@@ -28,7 +28,7 @@ let package = Package(
                 "AppStoreReviews"
             ],
             resources: [
-                .copy("Resources")
+                .copy("TestData")
             ]),
     ]
 )
