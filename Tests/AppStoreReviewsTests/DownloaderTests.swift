@@ -147,13 +147,16 @@ final class DownloaderTests: XCTestCase {
             }
 
         waitForExpectations(timeout: 1)
-        XCTAssertNotNil(receivedValue)
-        XCTAssertEqual(receivedValue?.entries.count ?? 0, 50)
-        XCTAssertEqual(receivedValue?.author, Feed.Author(
+        sub.cancel()
+        guard let value = receivedValue else {
+            return XCTFail("receivedValue should not be nil")
+        }
+        XCTAssertEqual(value.entries.count, 50)
+        XCTAssertEqual(value.author, Feed.Author(
                         name: "iTunes Store",
                         uri: URL(string: "http://www.apple.com/uk/itunes/")!)
         )
-        XCTAssertEqual(receivedValue?.entries.first, Feed.Entry(
+        XCTAssertEqual(value.entries.first, Feed.Entry(
                         author: Feed.Author(name: "lxzyzwoout", uri: URL(string: "https://itunes.apple.com/cn/reviews/id552914365?l=en")!),
                         appVersion: "12.0",
                         rating: 1,
@@ -162,13 +165,19 @@ final class DownloaderTests: XCTestCase {
                         description: "其他的工具都是越开发越好用，就Xcode例外，越开发越难用",
                         voteCount: 2,
                         voteSum: 1))
-        XCTAssertEqual(receivedValue?.title, "iTunes Store: Customer Reviews")
-        XCTAssertEqual(receivedValue?.rights, "Copyright 2008 Apple Inc.")
+        XCTAssertEqual(value.title, "iTunes Store: Customer Reviews")
+        XCTAssertEqual(value.rights, "Copyright 2008 Apple Inc.")
         // 2021-01-30T12:52:46-07:00
         let expectedDate = DateComponents(calendar: .current, timeZone: TimeZone(secondsFromGMT: -7 * 60 * 60), year: 2021, month: 1, day: 30, hour: 12, minute: 52, second: 46).date
-        XCTAssertNotNil(expectedDate, "Failed to generate expected date")
-        XCTAssertEqual(receivedValue?.updated, expectedDate)
-        sub.cancel()
+        XCTAssertEqual(value.updated, expectedDate)
+        let expectedLinks = Feed.Links(
+            alternate: URL(string: "https://apps.apple.com/WebObjects/MZStore.woa/wa/viewGrouping?cc=cn&id=29099&l=en")!,
+            current: URL(string: "https://itunes.apple.com/rss/customerreviews/page=10/id=497799835/sortby=mostrecent/json?l=en&cc=cn")!,
+            first: URL(string: "https://itunes.apple.com/cn/rss/customerreviews/page=1/id=497799835/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=10/id=497799835/sortby=mostrecent/json")!,
+            last: URL(string: "https://itunes.apple.com/cn/rss/customerreviews/page=10/id=497799835/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=10/id=497799835/sortby=mostrecent/json")!,
+            previous: URL(string: "https://itunes.apple.com/cn/rss/customerreviews/page=9/id=497799835/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=10/id=497799835/sortby=mostrecent/json")!,
+            next: URL(string: "https://itunes.apple.com/cn/rss/customerreviews/page=10/id=497799835/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=10/id=497799835/sortby=mostrecent/json")!)
+        XCTAssertEqual(value.links, expectedLinks)
     }
 
     func testFetchWithInvalidRatingReturnsValidData() throws {

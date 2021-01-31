@@ -50,7 +50,8 @@ extension Feed.Entry {
 extension Feed {
     init?(_ feed: DecodableFeed.Feed) {
         guard let author = Feed.Author(feed.author),
-              let updated = ISO8601DateFormatter().date(from: feed.updated.label) else {
+              let updated = ISO8601DateFormatter().date(from: feed.updated.label),
+              let links = Feed.Links(feed.link) else {
             Logger().error("Failed to convert DecodableFeed.Feed values.")
             return nil
         }
@@ -59,7 +60,49 @@ extension Feed {
             entries: feed.entry?.compactMap { Feed.Entry($0) } ?? [],
             title: feed.title.label,
             rights: feed.rights.label,
-            updated: updated
+            updated: updated,
+            links: links
         )
+    }
+}
+
+extension Feed.Links {
+    init?(_ links: [DecodableFeed.LinkElement]) {
+        guard let alternate = links[.alternate],
+              let current = links[.current],
+              let first = links[.first],
+              let last = links[.last],
+              let previous = links[.previous],
+              let next = links[.next] else {
+            return nil
+        }
+        self.init(
+            alternate: alternate,
+            current: current,
+            first: first,
+            last: last,
+            previous: previous,
+            next: next
+        )
+    }
+}
+
+// MARK: - Helpers
+
+private enum RelKeys: String {
+    case alternate
+    case current = "self"
+    case first
+    case last
+    case previous
+    case next
+}
+
+extension Array where Element == DecodableFeed.LinkElement {
+    fileprivate subscript(rel: RelKeys) -> URL? {
+        guard let href = first(where: { $0.attributes.rel == rel.rawValue })?.attributes.href else {
+            return nil
+        }
+        return URL(string: href)
     }
 }
