@@ -49,13 +49,17 @@ extension Feed.Entry {
 
 extension Feed {
     init?(_ feed: DecodableFeed.Feed) {
-        guard let author = Feed.Author(feed.author) else {
+        guard let author = Feed.Author(feed.author),
+              let updated = ISO8601DateFormatter().date(from: feed.updated.label) else {
             Logger().error("Failed to convert DecodableFeed.Feed values.")
             return nil
         }
         self.init(
             author: author,
-            entries: feed.entry?.compactMap { Feed.Entry($0) } ?? []
+            entries: feed.entry?.compactMap { Feed.Entry($0) } ?? [],
+            title: feed.title.label,
+            rights: feed.rights.label,
+            updated: updated
         )
     }
 }

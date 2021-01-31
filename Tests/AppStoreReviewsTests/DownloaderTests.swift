@@ -162,6 +162,12 @@ final class DownloaderTests: XCTestCase {
                         description: "其他的工具都是越开发越好用，就Xcode例外，越开发越难用",
                         voteCount: 2,
                         voteSum: 1))
+        XCTAssertEqual(receivedValue?.title, "iTunes Store: Customer Reviews")
+        XCTAssertEqual(receivedValue?.rights, "Copyright 2008 Apple Inc.")
+        // 2021-01-30T12:52:46-07:00
+        let expectedDate = DateComponents(calendar: .current, timeZone: TimeZone(secondsFromGMT: -7 * 60 * 60), year: 2021, month: 1, day: 30, hour: 12, minute: 52, second: 46).date
+        XCTAssertNotNil(expectedDate, "Failed to generate expected date")
+        XCTAssertEqual(receivedValue?.updated, expectedDate)
         sub.cancel()
     }
 
