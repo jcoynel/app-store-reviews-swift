@@ -129,6 +129,25 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
+    func testFetchWithInvalidLinksReturnsInvalidDataError() throws {
+        let mockData = try TestData.json(fileName: "invalid_links")
+        MockURLProtocol.mockResponse = .init(data: mockData)
+
+        let exp = expectation(description: "Response error")
+        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+            .sink { completion in
+                if case .failure(let error) = completion,
+                   case .invalidData = error {
+                    exp.fulfill()
+                }
+            } receiveValue: { feed in
+                XCTFail("Unexpected value received: \(feed)")
+            }
+
+        waitForExpectations(timeout: 1)
+        sub.cancel()
+    }
+
     // MARK: - Success
 
     func testFetchWithValidContentReturnsValidData() throws {
@@ -250,6 +269,7 @@ final class DownloaderTests: XCTestCase {
         ("testFetchWithInvalidJSONReturnsJsonDecoderError", testFetchWithInvalidJSONReturnsJsonDecoderError),
         ("testFetchWithNoResponseReturnsNoResponseDataError", testFetchWithNoResponseReturnsNoResponseDataError),
         ("testFetchWithInvalidFeedAuthorUriReturnsInvalidDataError", testFetchWithInvalidFeedAuthorUriReturnsInvalidDataError),
+        ("testFetchWithInvalidLinksReturnsInvalidDataError", testFetchWithInvalidLinksReturnsInvalidDataError),
         ("testFetchWithValidContentReturnsValidData", testFetchWithValidContentReturnsValidData),
         ("testFetchWithInvalidRatingReturnsValidData", testFetchWithInvalidRatingReturnsValidData),
         ("testFetchWithNoReviewsReturnsValidData", testFetchWithNoReviewsReturnsValidData),
