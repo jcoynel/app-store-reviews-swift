@@ -6,4 +6,6 @@ XCTMain([
     testCase(URLExtensionsTests.allTests),
     testCase(DecodableFeedTests.allTests),
     testCase(DownloaderTests.allTests),
+    testCase(PageExtensionsTests.allTests),
+    testCase(FeedExtensionsTests.allTests),
 ])

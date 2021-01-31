@@ -33,12 +33,15 @@ public enum Territory: String, CaseIterable {
     case ZA, ZMB, ZW
 }
 
-public extension Territory {
+extension Territory: Equatable {}
+extension Territory: Codable {}
+
+extension Territory {
     /// The ISO3166 two or three letters country or region code.
-    var isoCode: String { rawValue }
+    public var isoCode: String { rawValue }
 
     /// Name of the country or territory, in English.
-    var name: String {
+    public var name: String {
         switch self {
         case .AFG: return "Afghanistan"
         case .AE: return "United Arab Emirates"

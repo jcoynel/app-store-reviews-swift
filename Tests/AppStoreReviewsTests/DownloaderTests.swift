@@ -22,27 +22,11 @@ final class DownloaderTests: XCTestCase {
 
     // MARK: - Errors
 
-    func testFetchWithInvalidPageReturnsInvalidURLError() {
-        let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: -1, territory: .GB, page: 1))
-            .sink { completion in
-                if case .failure(let error) = completion,
-                   case .invalidURL = error {
-                    exp.fulfill()
-                }
-            } receiveValue: { feed in
-                XCTFail("Unexpected value received: \(feed)")
-            }
-
-        waitForExpectations(timeout: 1)
-        sub.cancel()
-    }
-
-    func testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError() {
+    func testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError() throws {
         MockURLProtocol.mockResponse = .init(statusCode: 500, data: Data())
 
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .failure(let error) = completion,
                    case .invalidHTTPResponseStatus(code: let code) = error,
@@ -57,11 +41,11 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithNonHTTPResponseReturnsInvalidResponseError() {
+    func testFetchWithNonHTTPResponseReturnsInvalidResponseError() throws {
         MockURLProtocol.mockResponse = .init(data: Data(), isHTTPURLResponse: false)
 
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .failure(let error) = completion,
                    case .invalidResponse = error {
@@ -80,7 +64,7 @@ final class DownloaderTests: XCTestCase {
         MockURLProtocol.mockResponse = .init(data: mockData)
 
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .failure(let error) = completion,
                    case .jsonDecoder = error {
@@ -96,7 +80,7 @@ final class DownloaderTests: XCTestCase {
 
     func testFetchWithNoResponseReturnsNoResponseDataError() throws {
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .failure(let error) = completion,
                    case .noResponseData = error {
@@ -115,7 +99,7 @@ final class DownloaderTests: XCTestCase {
         MockURLProtocol.mockResponse = .init(data: mockData)
 
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .failure(let error) = completion,
                    case .invalidData = error {
@@ -134,7 +118,7 @@ final class DownloaderTests: XCTestCase {
         MockURLProtocol.mockResponse = .init(data: mockData)
 
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .failure(let error) = completion,
                    case .invalidData = error {
@@ -156,7 +140,7 @@ final class DownloaderTests: XCTestCase {
 
         var receivedValue: Feed?
         let exp = expectation(description: "Response success")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .finished = completion {
                     exp.fulfill()
@@ -205,7 +189,7 @@ final class DownloaderTests: XCTestCase {
 
         var receivedValue: Feed?
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .finished = completion {
                     exp.fulfill()
@@ -226,7 +210,7 @@ final class DownloaderTests: XCTestCase {
 
         var receivedValue: Feed?
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .finished = completion {
                     exp.fulfill()
@@ -247,7 +231,7 @@ final class DownloaderTests: XCTestCase {
 
         var receivedValue: Feed?
         let exp = expectation(description: "Response error")
-        let sub = sut.fetch(page: Page(appID: 1, territory: .GB, page: 1))
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .finished = completion {
                     exp.fulfill()
@@ -263,7 +247,6 @@ final class DownloaderTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testFetchWithInvalidPageReturnsInvalidURLError", testFetchWithInvalidPageReturnsInvalidURLError),
         ("testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError", testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError),
         ("testFetchWithNonHTTPResponseReturnsInvalidResponseError", testFetchWithNonHTTPResponseReturnsInvalidResponseError),
         ("testFetchWithInvalidJSONReturnsJsonDecoderError", testFetchWithInvalidJSONReturnsJsonDecoderError),
