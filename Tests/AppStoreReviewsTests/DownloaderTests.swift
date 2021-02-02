@@ -151,9 +151,7 @@ final class DownloaderTests: XCTestCase {
 
         waitForExpectations(timeout: 1)
         sub.cancel()
-        guard let value = receivedValue else {
-            return XCTFail("receivedValue should not be nil")
-        }
+        let value = try XCTUnwrap(receivedValue)
         XCTAssertEqual(value.entries.count, 50)
         XCTAssertEqual(value.author, Feed.Author(
                         name: "iTunes Store",
