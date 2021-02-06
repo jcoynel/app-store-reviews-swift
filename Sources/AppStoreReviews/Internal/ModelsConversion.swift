@@ -25,7 +25,7 @@ extension Feed.Author {
 }
 
 extension Feed.Entry {
-    init?(_ entry: DecodableFeed.Entry) {
+    init?(_ entry: DecodableFeed.Entry, territory: Territory, appID: Int) {
         guard let author = Feed.Author(entry.author),
               let rating = Int(entry.imRating.label),
               let voteCount = Int(entry.imVoteCount.label),
@@ -42,7 +42,9 @@ extension Feed.Entry {
             title: entry.title.label,
             description: entry.content.label,
             voteCount: voteCount,
-            voteSum: voteSum
+            voteSum: voteSum,
+            territory: territory,
+            appID: appID
         )
     }
 }
@@ -75,7 +77,7 @@ extension Feed {
 
         self.init(
             author: author,
-            entries: feed.entry?.compactMap { Feed.Entry($0) } ?? [],
+            entries: feed.entry?.compactMap { Feed.Entry($0, territory: currentPage.territory, appID: currentPage.appID) } ?? [],
             title: feed.title.label,
             rights: feed.rights.label,
             updated: updated,

@@ -17,6 +17,11 @@ extension Feed {
         
         public let voteCount: Int
         public let voteSum: Int
+
+        /// The territory of the entry.
+        public var territory: Territory
+        /// The ID of the app.
+        public var appID: Int
     }
 }
 

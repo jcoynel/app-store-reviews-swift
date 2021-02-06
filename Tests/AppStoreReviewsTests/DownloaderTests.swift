@@ -165,7 +165,9 @@ final class DownloaderTests: XCTestCase {
                         title: "越来越烂",
                         description: "其他的工具都是越开发越好用，就Xcode例外，越开发越难用",
                         voteCount: 2,
-                        voteSum: 1))
+                        voteSum: 1,
+                        territory: .CN,
+                        appID: 497799835))
         XCTAssertEqual(value.title, "iTunes Store: Customer Reviews")
         XCTAssertEqual(value.rights, "Copyright 2008 Apple Inc.")
         // 2021-01-30T12:52:46-07:00
