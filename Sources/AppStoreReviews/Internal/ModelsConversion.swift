@@ -55,13 +55,36 @@ extension Feed {
             Logger().error("Failed to convert DecodableFeed.Feed values.")
             return nil
         }
+
+        guard let currentPage = Page(links.current),
+              let firstPage = Page(links.first),
+              let lastPage = Page(links.last) else {
+            Logger().error("Failed to generate pages from links.")
+            return nil
+        }
+
+        var previousPage: Page? = nil
+        if currentPage.page > firstPage.page, let page = try? Page(appID: currentPage.appID, territory: currentPage.territory, page: currentPage.page - 1) {
+            previousPage = page
+        }
+
+        var nextPage: Page? = nil
+        if currentPage.page < lastPage.page, let page = try? Page(appID: currentPage.appID, territory: currentPage.territory, page: currentPage.page + 1) {
+            nextPage = page
+        }
+
         self.init(
             author: author,
             entries: feed.entry?.compactMap { Feed.Entry($0) } ?? [],
             title: feed.title.label,
             rights: feed.rights.label,
             updated: updated,
-            links: links
+            links: links,
+            currentPage: currentPage,
+            firstPage: firstPage,
+            lastPage: lastPage,
+            previousPage: previousPage,
+            nextPage: nextPage
         )
     }
 }

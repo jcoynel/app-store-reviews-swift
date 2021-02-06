@@ -244,6 +244,104 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
+    // MARK: Pages
+
+    func testFetchFirstPageWithNoNextPageSetsPageProperties() throws {
+        let mockData = try TestData.json(fileName: "1510826067_gb_1")
+        MockURLProtocol.mockResponse = .init(data: mockData)
+
+        var receivedValue: Feed?
+        let exp = expectation(description: "Response error")
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
+            .sink { completion in
+                if case .finished = completion {
+                    exp.fulfill()
+                }
+            } receiveValue: { feed in
+                receivedValue = feed
+            }
+
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(receivedValue?.currentPage, try Page(appID: 1510826067, territory: .GB, page: 1))
+        XCTAssertEqual(receivedValue?.firstPage, try Page(appID: 1510826067, territory: .GB, page: 1))
+        XCTAssertEqual(receivedValue?.lastPage, try Page(appID: 1510826067, territory: .GB, page: 1))
+        XCTAssertNil(receivedValue?.previousPage)
+        XCTAssertNil(receivedValue?.nextPage)
+        sub.cancel()
+    }
+
+    func testFetchEmptyPageSetsPageProperties() throws {
+        let mockData = try TestData.json(fileName: "1510826067_gb_2")
+        MockURLProtocol.mockResponse = .init(data: mockData)
+
+        var receivedValue: Feed?
+        let exp = expectation(description: "Response error")
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
+            .sink { completion in
+                if case .finished = completion {
+                    exp.fulfill()
+                }
+            } receiveValue: { feed in
+                receivedValue = feed
+            }
+
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(receivedValue?.currentPage, try Page(appID: 1510826067, territory: .GB, page: 2))
+        XCTAssertEqual(receivedValue?.firstPage, try Page(appID: 1510826067, territory: .GB, page: 1))
+        XCTAssertEqual(receivedValue?.lastPage, try Page(appID: 1510826067, territory: .GB, page: 1))
+        XCTAssertEqual(receivedValue?.previousPage, try Page(appID: 1510826067, territory: .GB, page: 1))
+        XCTAssertNil(receivedValue?.nextPage)
+        sub.cancel()
+    }
+
+    func testFetchLastPageSetsPageProperties() throws {
+        let mockData = try TestData.json(fileName: "497799835_cn_10")
+        MockURLProtocol.mockResponse = .init(data: mockData)
+
+        var receivedValue: Feed?
+        let exp = expectation(description: "Response error")
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
+            .sink { completion in
+                if case .finished = completion {
+                    exp.fulfill()
+                }
+            } receiveValue: { feed in
+                receivedValue = feed
+            }
+
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(receivedValue?.currentPage, try Page(appID: 497799835, territory: .CN, page: 10))
+        XCTAssertEqual(receivedValue?.firstPage, try Page(appID: 497799835, territory: .CN, page: 1))
+        XCTAssertEqual(receivedValue?.lastPage, try Page(appID: 497799835, territory: .CN, page: 10))
+        XCTAssertEqual(receivedValue?.previousPage, try Page(appID: 497799835, territory: .CN, page: 9))
+        XCTAssertNil(receivedValue?.nextPage)
+        sub.cancel()
+    }
+
+    func testFetchMiddlePageSetsPageProperties() throws {
+        let mockData = try TestData.json(fileName: "497799835_cn_5")
+        MockURLProtocol.mockResponse = .init(data: mockData)
+
+        var receivedValue: Feed?
+        let exp = expectation(description: "Response error")
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
+            .sink { completion in
+                if case .finished = completion {
+                    exp.fulfill()
+                }
+            } receiveValue: { feed in
+                receivedValue = feed
+            }
+
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(receivedValue?.currentPage, try Page(appID: 497799835, territory: .CN, page: 5))
+        XCTAssertEqual(receivedValue?.firstPage, try Page(appID: 497799835, territory: .CN, page: 1))
+        XCTAssertEqual(receivedValue?.lastPage, try Page(appID: 497799835, territory: .CN, page: 10))
+        XCTAssertEqual(receivedValue?.previousPage, try Page(appID: 497799835, territory: .CN, page: 4))
+        XCTAssertEqual(receivedValue?.nextPage, try Page(appID: 497799835, territory: .CN, page: 6))
+        sub.cancel()
+    }
+
     static var allTests = [
         ("testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError", testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError),
         ("testFetchWithNonHTTPResponseReturnsInvalidResponseError", testFetchWithNonHTTPResponseReturnsInvalidResponseError),
@@ -251,9 +349,15 @@ final class DownloaderTests: XCTestCase {
         ("testFetchWithNoResponseReturnsNoResponseDataError", testFetchWithNoResponseReturnsNoResponseDataError),
         ("testFetchWithInvalidFeedAuthorUriReturnsInvalidDataError", testFetchWithInvalidFeedAuthorUriReturnsInvalidDataError),
         ("testFetchWithInvalidLinksReturnsInvalidDataError", testFetchWithInvalidLinksReturnsInvalidDataError),
+
         ("testFetchWithValidContentReturnsValidData", testFetchWithValidContentReturnsValidData),
         ("testFetchWithInvalidRatingReturnsValidData", testFetchWithInvalidRatingReturnsValidData),
         ("testFetchWithNoReviewsReturnsValidData", testFetchWithNoReviewsReturnsValidData),
         ("testFetchWithInvalidEntryAuthorReturnsValidData", testFetchWithInvalidEntryAuthorReturnsValidData),
+
+        ("testFetchFirstPageWithNoNextPageSetsPageProperties", testFetchFirstPageWithNoNextPageSetsPageProperties),
+        ("testFetchEmptyPageSetsPageProperties", testFetchEmptyPageSetsPageProperties),
+        ("testFetchLastPageSetsPageProperties", testFetchLastPageSetsPageProperties),
+        ("testFetchMiddlePageSetsPageProperties", testFetchMiddlePageSetsPageProperties),
     ]
 }
