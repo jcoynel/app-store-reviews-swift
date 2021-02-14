@@ -343,23 +343,4 @@ final class DownloaderTests: XCTestCase {
         XCTAssertEqual(receivedValue?.nextPage, try Page(appID: 497799835, territory: .CN, page: 6))
         sub.cancel()
     }
-
-    static var allTests = [
-        ("testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError", testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError),
-        ("testFetchWithNonHTTPResponseReturnsInvalidResponseError", testFetchWithNonHTTPResponseReturnsInvalidResponseError),
-        ("testFetchWithInvalidJSONReturnsJsonDecoderError", testFetchWithInvalidJSONReturnsJsonDecoderError),
-        ("testFetchWithNoResponseReturnsNoResponseDataError", testFetchWithNoResponseReturnsNoResponseDataError),
-        ("testFetchWithInvalidFeedAuthorUriReturnsInvalidDataError", testFetchWithInvalidFeedAuthorUriReturnsInvalidDataError),
-        ("testFetchWithInvalidLinksReturnsInvalidDataError", testFetchWithInvalidLinksReturnsInvalidDataError),
-
-        ("testFetchWithValidContentReturnsValidData", testFetchWithValidContentReturnsValidData),
-        ("testFetchWithInvalidRatingReturnsValidData", testFetchWithInvalidRatingReturnsValidData),
-        ("testFetchWithNoReviewsReturnsValidData", testFetchWithNoReviewsReturnsValidData),
-        ("testFetchWithInvalidEntryAuthorReturnsValidData", testFetchWithInvalidEntryAuthorReturnsValidData),
-
-        ("testFetchFirstPageWithNoNextPageSetsPageProperties", testFetchFirstPageWithNoNextPageSetsPageProperties),
-        ("testFetchEmptyPageSetsPageProperties", testFetchEmptyPageSetsPageProperties),
-        ("testFetchLastPageSetsPageProperties", testFetchLastPageSetsPageProperties),
-        ("testFetchMiddlePageSetsPageProperties", testFetchMiddlePageSetsPageProperties),
-    ]
 }

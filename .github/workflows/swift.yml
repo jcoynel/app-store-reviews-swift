@@ -1,19 +1,30 @@
-name: Swift
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+name: CI
+on: [push, pull_request]
 jobs:
-  build:
-
+  unit-test-macos:
     runs-on: macos-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Build
       run: swift build -v
-    - name: Run tests
+    - name: Build & Test
       run: swift test -v
+  unit-test-ubuntu:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        images:
+        - swift:5.3
+        - swiftlang/swift:nightly-bionic
+    container:
+      image: ${{ matrix.images }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Resolve Swift dependencies
+        run: swift package resolve
+      - name: Build
+        run: swift build
+      - name: Build & Test
+        run: swift test --enable-test-discovery

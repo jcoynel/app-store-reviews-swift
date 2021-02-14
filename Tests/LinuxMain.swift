@@ -1,11 +1,1 @@
-import XCTest
-import AppStoreReviewsTests
-
-XCTMain([
-    testCase(FeedTests.allTests),
-    testCase(DecodableFeedTests.allTests),
-    testCase(DownloaderTests.allTests),
-    testCase(PageExtensionsTests.allTests),
-    testCase(TerritoriesTests.allTests),
-    testCase(URLExtensionsTests.allTests),
-])
+fatalError("Run the tests with `swift test --enable-test-discovery` on Linux.")

@@ -31,13 +31,4 @@ final class DecodableFeedTests: XCTestCase {
         let json = try TestData.json(fileName: "555731861_us_11")
         XCTAssertThrowsError(try JSONDecoder().decode(DecodableFeed.CustomerReviews.self, from: json))
     }
-
-    static var allTests = [
-        ("testDecodableFeedJsonIsDecodableWhenOnLastPageGB", testDecodableFeedJsonIsDecodableWhenOnLastPageGB),
-        ("testDecodableFeedJsonIsDecodableWhenOnLastPageCN", testDecodableFeedJsonIsDecodableWhenOnLastPageCN),
-        ("testDecodableFeedJsonIsDecodableWhenOnFirstPageFR", testDecodableFeedJsonIsDecodableWhenOnFirstPageFR),
-        ("testDecodableFeedJsonIsDecodableWhenOnEmptyPage", testDecodableFeedJsonIsDecodableWhenOnEmptyPage),
-        ("testDecodableFeedJsonIsDecodableForNonExistingApp", testDecodableFeedJsonIsDecodableForNonExistingApp),
-        ("testDecodableFeedJsonIsNotDecodableWhenExceedingLastPage", testDecodableFeedJsonIsNotDecodableWhenExceedingLastPage),
-    ]
 }

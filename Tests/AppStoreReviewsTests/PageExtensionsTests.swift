@@ -55,12 +55,4 @@ final class PageExtensionsTests: XCTestCase {
         XCTAssertEqual(Page(url4), try Page(appID: 497799835, territory: .CN, page: 9))
         XCTAssertEqual(Page(url5), try Page(appID: 497799835, territory: .CN, page: 1))
     }
-
-    static var allTests = [
-        ("testInvalidMiscUrlsReturnNil", testInvalidMiscUrlsReturnNil),
-        ("testInvalidFeedUrlsReturnNil", testInvalidFeedUrlsReturnNil),
-        ("testInvalidLinkUrlsReturnNil", testInvalidLinkUrlsReturnNil),
-        ("testUrlsCreatedFromPageReturnEqualPage", testUrlsCreatedFromPageReturnEqualPage),
-        ("testValidLinkUrlReturnsPage", testValidLinkUrlReturnsPage),
-    ]
 }

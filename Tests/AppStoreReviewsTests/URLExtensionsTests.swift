@@ -24,8 +24,4 @@ final class URLExtensionsTests: XCTestCase {
             URL(string: "https://itunes.apple.com/rss/customerreviews/page=4/id=555731861/sortby=mostrecent/json?l=en&cc=us")
         )
     }
-
-    static var allTests = [
-        ("testInitWithValidParametersReturnsURL", testInitWithValidParametersReturnsURL),
-    ]
 }

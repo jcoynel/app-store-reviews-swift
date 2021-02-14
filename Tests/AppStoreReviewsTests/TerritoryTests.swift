@@ -21,10 +21,4 @@ final class TerritoryTests: XCTestCase {
             XCTAssertFalse(territory.name.isEmpty)
         }
     }
-
-    static var allTests = [
-        ("testIsoCodeIsUppercase", testIsoCodeIsUppercase),
-        ("testIsoCodeLengthIsTwoOrThree", testIsoCodeLengthIsTwoOrThree),
-        ("testNameIsNotEmpty", testNameIsNotEmpty),
-    ]
 }
