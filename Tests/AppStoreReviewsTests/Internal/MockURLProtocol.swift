@@ -4,7 +4,7 @@ import Foundation
 ///
 /// Reference: [Apple Developer Documentation - URLProtocol](https://developer.apple.com/documentation/foundation/urlprotocol)
 final class MockURLProtocol: URLProtocol {
-    static var mockResponse: ResponseFields?
+    static var mockResponse: Response?
 
     // MARK: URLProtocol
 
@@ -17,18 +17,27 @@ final class MockURLProtocol: URLProtocol {
     }
 
     override func startLoading() {
-        if let url = request.url,
-           let responseFields = MockURLProtocol.mockResponse {
-            if responseFields.isHTTPURLResponse == false {
+        switch Self.mockResponse {
+        case .error(let error):
+            client?.urlProtocol(self, didFailWithError: error)
+            return
+        case .nonHTTPURLResponse:
+            if let url = request.url {
                 let response = URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
                 client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
-            } else if let response = HTTPURLResponse(url: url,
-                                              statusCode: responseFields.statusCode,
-                                              httpVersion: responseFields.httpVersion,
-                                              headerFields: responseFields.headerFields) {
+            }
+        case .HTTPURLResponse(let responseFields):
+            if let url = request.url,
+               let response = HTTPURLResponse(
+                url: url,
+                statusCode: responseFields.statusCode,
+                httpVersion: responseFields.httpVersion,
+                headerFields: responseFields.headerFields) {
                 client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
                 client?.urlProtocol(self, didLoad: responseFields.data)
             }
+        case .none:
+            break
         }
 
         client?.urlProtocolDidFinishLoading(self)
@@ -38,24 +47,27 @@ final class MockURLProtocol: URLProtocol {
 }
 
 extension MockURLProtocol {
+    enum Response {
+        case error(Error)
+        case nonHTTPURLResponse
+        case HTTPURLResponse(ResponseFields)
+    }
+
     struct ResponseFields {
         let statusCode: Int
         let httpVersion: String?
         let headerFields: [String: String]?
         let data: Data
-        let isHTTPURLResponse: Bool
 
         init(statusCode: Int = 200,
              httpVersion: String? = nil,
              headerFields: [String: String]? = nil,
-             data: Data,
-             isHTTPURLResponse: Bool = true
+             data: Data
         ) {
             self.statusCode = statusCode
             self.httpVersion = httpVersion
             self.headerFields = headerFields
             self.data = data
-            self.isHTTPURLResponse = isHTTPURLResponse
         }
     }
 }
