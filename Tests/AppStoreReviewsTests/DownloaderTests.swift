@@ -20,9 +20,10 @@ final class DownloaderTests: XCTestCase {
         MockURLProtocol.mockResponse = nil
     }
 
-    // MARK: - Errors
+    // MARK: - Fetch with Publisher (Combine)
+    // MARK: Errors
 
-    func testFetchWithInvalidHTTPCodeReturnsInvalidHTTPResponseStatusError() throws {
+    func test_fetchPublisher_withInvalidHTTPCode_returnsInvalidHTTPResponseStatusError() throws {
         MockURLProtocol.mockResponse = .init(statusCode: 500, data: Data())
 
         let exp = expectation(description: "Response error")
@@ -41,7 +42,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithNonHTTPResponseReturnsInvalidResponseError() throws {
+    func test_fetchPublisher_withNonHTTPResponse_returnsInvalidResponseError() throws {
         MockURLProtocol.mockResponse = .init(data: Data(), isHTTPURLResponse: false)
 
         let exp = expectation(description: "Response error")
@@ -59,7 +60,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithInvalidJSONReturnsJsonDecoderError() throws {
+    func test_fetchPublisher_withInvalidJSON_returnsJsonDecoderError() throws {
         let mockData = try TestData.json(fileName: "555731861_us_11")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -78,7 +79,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithNoResponseReturnsNetworkError() throws {
+    func test_fetchPublisher_withNoResponse_returnsNetworkError() throws {
         let exp = expectation(description: "Response error")
         let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
@@ -94,7 +95,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithInvalidFeedAuthorUriReturnsInvalidDataError() throws {
+    func test_fetchPublisher_withInvalidFeedAuthorUri_returnsInvalidDataError() throws {
         let mockData = try TestData.json(fileName: "invalid_feed_author_uri")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -113,7 +114,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithInvalidLinksReturnsInvalidDataError() throws {
+    func test_fetchPublisher_withInvalidLinks_returnsInvalidDataError() throws {
         let mockData = try TestData.json(fileName: "invalid_links")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -132,9 +133,9 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    // MARK: - Success
+    // MARK: Success
 
-    func testFetchWithValidContentReturnsValidData() throws {
+    func test_fetchPublisher_withValidContent_returnsValidData() throws {
         let mockData = try TestData.json(fileName: "497799835_cn_10")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -183,7 +184,7 @@ final class DownloaderTests: XCTestCase {
         XCTAssertEqual(value.links, expectedLinks)
     }
 
-    func testFetchWithInvalidRatingReturnsValidData() throws {
+    func test_fetchPublisher_withInvalidRating_returnsValidData() throws {
         let mockData = try TestData.json(fileName: "invalid_rating")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -204,7 +205,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithNoReviewsReturnsValidData() throws {
+    func test_fetchPublisher_withNoReviews_returnsValidData() throws {
         let mockData = try TestData.json(fileName: "1510826067_gb_2")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -225,7 +226,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithInvalidEntryAuthorReturnsValidData() throws {
+    func test_fetchPublisher_withInvalidEntryAuthor_returnsValidData() throws {
         let mockData = try TestData.json(fileName: "invalid_entry_author_uri")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -248,7 +249,7 @@ final class DownloaderTests: XCTestCase {
 
     // MARK: Pages
 
-    func testFetchFirstPageWithNoNextPageSetsPageProperties() throws {
+    func test_fetchPublisher_firstPageWithNoNextPage_setsPageProperties() throws {
         let mockData = try TestData.json(fileName: "1510826067_gb_1")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -272,7 +273,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchEmptyPageSetsPageProperties() throws {
+    func test_fetchPublisher_emptyPage_setsPageProperties() throws {
         let mockData = try TestData.json(fileName: "1510826067_gb_2")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -296,7 +297,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchLastPageSetsPageProperties() throws {
+    func test_fetchPublisher_lastPage_setsPageProperties() throws {
         let mockData = try TestData.json(fileName: "497799835_cn_10")
         MockURLProtocol.mockResponse = .init(data: mockData)
 
@@ -320,7 +321,7 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchMiddlePageSetsPageProperties() throws {
+    func test_fetchPublisher_middlePage_setsPageProperties() throws {
         let mockData = try TestData.json(fileName: "497799835_cn_5")
         MockURLProtocol.mockResponse = .init(data: mockData)
 

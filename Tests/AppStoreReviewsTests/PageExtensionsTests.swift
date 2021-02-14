@@ -4,7 +4,7 @@ import XCTest
 final class PageExtensionsTests: XCTestCase {
     // MARK: - Failure
 
-    func testInvalidMiscUrlsReturnNil() {
+    func test_init_withInvalidMiscUrls_returnsNil() {
         XCTAssertNil(Page(URL(string: "https://56north.co")!))
         XCTAssertNil(Page(URL(string: "https://world-heritage.app")!))
         XCTAssertNil(Page(URL(string: "https://github.com/jcoynel/app-store-reviews-swift")!))
@@ -13,7 +13,7 @@ final class PageExtensionsTests: XCTestCase {
         XCTAssertNil(Page(URL(string: "//some/path/example.json")!))
     }
 
-    func testInvalidFeedUrlsReturnNil() {
+    func test_init_withInvalidFeedUrls_returnsNil() {
         XCTAssertNil(Page(URL(string: "https://itunes.apple.com/rss/customerreviews/page=0/id=497799835/sortby=mostrecent/json?l=en&cc=cn")!))
         XCTAssertNil(Page(URL(string: "https://itunes.apple.com/rss/customerreviews/page=1/id=-1/sortby=mostrecent/json?l=en&cc=cn")!))
         XCTAssertNil(Page(URL(string: "https://itunes.apple.com/fr/rss/customerreviews/page=abc/id=1/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=1/id=1/sortby=mostrecent/json")!))
@@ -23,7 +23,7 @@ final class PageExtensionsTests: XCTestCase {
         XCTAssertNil(Page(URL(string: "https://itunes.apple.com/rss/customerreviews/page=1/id=1/sortby=mostrecent/json?l=en&cc=abc")!))
     }
 
-    func testInvalidLinkUrlsReturnNil() {
+    func test_init_withInvalidLinkUrls_returnsNil() {
         XCTAssertNil(Page(URL(string: "https://itunes.apple.com/rss/customerreviews/page=2/id=1/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=2/id=1/sortby=mostrecent/json")!))
         XCTAssertNil(Page(URL(string: "https://itunes.apple.com/abc/rss/customerreviews/page=2/id=1/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=2/id=1/sortby=mostrecent/json")!))
         XCTAssertNil(Page(URL(string: "https://itunes.apple.com/fr/rss/customerreviews/page=2/id=abc/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=1/id=1/sortby=mostrecent/json")!))
@@ -32,7 +32,7 @@ final class PageExtensionsTests: XCTestCase {
 
     // MARK: - Success
 
-    func testUrlsCreatedFromPageReturnEqualPage() {
+    func test_init_withUrlsCreatedFromPage_returnsEqualPage() {
         guard let page1 = try? Page(appID: 1510826067, territory: .GB, page: 2),
               let page2 = try? Page(appID: 1, territory: .GB, page: 100),
               let page1URL = URL(page1), let page2URL = URL(page2) else {
@@ -42,7 +42,7 @@ final class PageExtensionsTests: XCTestCase {
         XCTAssertEqual(Page(page2URL), page2)
     }
 
-    func testValidLinkUrlReturnsPage() {
+    func test_init_withValidLinkUrl_returnsPage() {
         let url1 = URL(string: "https://itunes.apple.com/rss/customerreviews/page=10/id=497799835/sortby=mostrecent/json?l=en&cc=cn")!
         let url2 = URL(string: "https://itunes.apple.com/fr/rss/customerreviews/page=2/id=1/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=3/id=1/sortby=mostrecent/json")!
         let url3 = URL(string: "https://itunes.apple.com/cn/rss/customerreviews/page=10/id=497799835/sortby=mostrecent/xml?l=en&urlDesc=/customerreviews/page=9/id=497799835/sortby=mostrecent/json")!

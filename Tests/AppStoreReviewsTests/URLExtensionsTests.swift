@@ -2,7 +2,7 @@ import XCTest
 @testable import AppStoreReviews
 
 final class URLExtensionsTests: XCTestCase {
-    func testInitWithValidParametersReturnsURL() {
+    func test_initWithValidParameters_returnsURL() {
         XCTAssertEqual(
             URL(try Page(appID: 1510826067, territory: .GB, page: 1))?.absoluteString,
             "https://itunes.apple.com/rss/customerreviews/page=1/id=1510826067/sortby=mostrecent/json?l=en&cc=gb"
