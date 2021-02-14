@@ -1,9 +1,10 @@
 import Foundation
+#if canImport(Combine)
 import Combine
+#endif
 
 /// Provides functionality to download App Store reviews data.
 public struct Downloader {
-    typealias Publisher = AnyPublisher<Feed, Downloader.Error>
     typealias Completion = (Result<Feed, Downloader.Error>) -> Void
 
     private let urlSession: URLSession
@@ -13,6 +14,9 @@ public struct Downloader {
     public init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession
     }
+
+    #if canImport(Combine)
+    typealias Publisher = AnyPublisher<Feed, Downloader.Error>
 
     /// Fetch the content of the page specified.
     /// - Parameter page: The page to download.
@@ -30,6 +34,7 @@ public struct Downloader {
             .mapError { ($0 as? Downloader.Error) ?? .networkError(underlyingError: $0) }
             .eraseToAnyPublisher()
     }
+    #endif
 
     /// Fetch the content of the page specified.
     /// - Parameters:

@@ -23,6 +23,8 @@ final class DownloaderTests: XCTestCase {
     // MARK: - Fetch with Publisher (Combine)
     // MARK: Errors
 
+    #if canImport(Combine)
+
     func test_fetchPublisher_withInvalidHTTPCode_returnsInvalidHTTPResponseStatusError() throws {
         MockURLProtocol.mockResponse = .HTTPURLResponse(.init(statusCode: 500, data: Data()))
 
@@ -366,6 +368,7 @@ final class DownloaderTests: XCTestCase {
         XCTAssertEqual(receivedValue?.nextPage, try Page(appID: 497799835, territory: .CN, page: 6))
         sub.cancel()
     }
+    #endif
 
     // MARK: - Fetch with URLSessionDataTask
 
