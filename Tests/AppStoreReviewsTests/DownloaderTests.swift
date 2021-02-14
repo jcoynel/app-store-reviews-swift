@@ -78,12 +78,12 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
-    func testFetchWithNoResponseReturnsNoResponseDataError() throws {
+    func testFetchWithNoResponseReturnsNetworkError() throws {
         let exp = expectation(description: "Response error")
         let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
             .sink { completion in
                 if case .failure(let error) = completion,
-                   case .noResponseData = error {
+                   case .networkError = error {
                     exp.fulfill()
                 }
             } receiveValue: { feed in

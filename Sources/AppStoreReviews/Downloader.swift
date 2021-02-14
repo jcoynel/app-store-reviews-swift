@@ -4,6 +4,7 @@ import Combine
 /// Provides functionality to download App Store reviews data.
 public struct Downloader {
     typealias Publisher = AnyPublisher<Feed, Downloader.Error>
+    typealias Completion = (Result<Feed, Downloader.Error>) -> Void
 
     private let urlSession: URLSession
 
@@ -23,28 +24,69 @@ public struct Downloader {
         }
         return urlSession.dataTaskPublisher(for: url)
             .tryMap { (output: (data: Data, response: URLResponse)) -> Feed in
-                guard let httpResponse = output.response as? HTTPURLResponse else {
-                    throw Downloader.Error.invalidResponse
-                }
-                guard httpResponse.statusCode == 200 else {
-                    throw Downloader.Error.invalidHTTPResponseStatus(code: httpResponse.statusCode)
-                }
-
-                let decodableFeed: DecodableFeed.CustomerReviews
-                do {
-                    decodableFeed = try JSONDecoder().decode(DecodableFeed.CustomerReviews.self, from: output.data)
-                } catch {
-                    throw Downloader.Error.jsonDecoder(underlyingError: error)
-                }
-
-                guard let feed = Feed(decodableFeed.feed) else {
-                    throw Downloader.Error.invalidData
-                }
-
-                return feed
+                try validate(response: output.response)
+                return try decode(feedData: output.data)
             }
-            .mapError { ($0 as? Downloader.Error) ?? Downloader.Error.noResponseData }
+            .mapError { ($0 as? Downloader.Error) ?? .networkError(underlyingError: $0) }
             .eraseToAnyPublisher()
+    }
+
+    /// Fetch the content of the page specified.
+    /// - Parameters:
+    ///   - page: The page to download.
+    ///   - completion: The completion handler called with a result.
+    /// - Returns: The `URLSessionDataTask` created to fetch the content, or `nil` in case of
+    /// failure.
+    func fetch(page: Page, completion: @escaping Completion) -> URLSessionDataTask? {
+        guard let url = URL(page) else {
+            completion(.failure(.invalidURL))
+            return nil
+        }
+        let task = urlSession.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                completion(.failure(.networkError(underlyingError: error)))
+                return
+            }
+            do {
+                try validate(response: response)
+
+                let feed = try decode(feedData: data)
+                completion(.success(feed))
+            } catch {
+                completion(.failure(error as! Downloader.Error))
+            }
+        }
+        task.resume()
+        return task
+    }
+}
+
+extension Downloader {
+    private func validate(response: URLResponse?) throws {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw Downloader.Error.invalidResponse
+        }
+        guard httpResponse.statusCode == 200 else {
+            throw Downloader.Error.invalidHTTPResponseStatus(code: httpResponse.statusCode)
+        }
+    }
+
+    private func decode(feedData: Data?) throws -> Feed {
+        guard let feedData = feedData else {
+            throw Downloader.Error.noResponseData
+        }
+
+        let decodableFeed: DecodableFeed.CustomerReviews
+        do {
+            decodableFeed = try JSONDecoder().decode(DecodableFeed.CustomerReviews.self, from: feedData)
+        } catch {
+            throw Downloader.Error.jsonDecoder(underlyingError: error)
+        }
+
+        guard let feed = Feed(decodableFeed.feed) else {
+            throw Downloader.Error.invalidData
+        }
+        return feed
     }
 }
 
@@ -57,5 +99,6 @@ extension Downloader {
         case jsonDecoder(underlyingError: Swift.Error)
         case invalidData
         case noResponseData
+        case networkError(underlyingError: Swift.Error)
     }
 }
