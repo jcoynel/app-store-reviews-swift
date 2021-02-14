@@ -73,7 +73,7 @@ extension Downloader {
 
     private func decode(feedData: Data?) throws -> Feed {
         guard let feedData = feedData else {
-            throw Downloader.Error.noResponseData
+            throw Downloader.Error.invalidResponse
         }
 
         let decodableFeed: DecodableFeed.CustomerReviews
@@ -98,7 +98,6 @@ extension Downloader {
         case invalidHTTPResponseStatus(code: Int)
         case jsonDecoder(underlyingError: Swift.Error)
         case invalidData
-        case noResponseData
         case networkError(underlyingError: Swift.Error)
     }
 }
