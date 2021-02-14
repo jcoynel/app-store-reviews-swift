@@ -8,7 +8,13 @@ jobs:
     - name: Build
       run: swift build -v
     - name: Build & Test
-      run: swift test -v
+      run: swift test -v --enable-code-coverage
+    - name: Report code coverage
+      run: xcrun llvm-cov report .build/debug/AppStoreReviewsPackageTests.xctest/Contents/MacOS/AppStoreReviewsPackageTests -instr-profile .build/debug/codecov/default.profdata
+    - name: Prepare code coverage
+      run: xcrun llvm-cov export -format="lcov" .build/debug/AppStoreReviewsPackageTests.xctest/Contents/MacOS/AppStoreReviewsPackageTests -instr-profile .build/debug/codecov/default.profdata > info.lcov
+    - name: Upload to codecov.io
+      run: bash <(curl https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }}
   unit-test-ubuntu:
     runs-on: ubuntu-latest
     strategy:
@@ -25,6 +31,6 @@ jobs:
       - name: Resolve Swift dependencies
         run: swift package resolve
       - name: Build
-        run: swift build
+        run: swift build -v
       - name: Build & Test
-        run: swift test --enable-test-discovery
+        run: swift test -v --enable-test-discovery
