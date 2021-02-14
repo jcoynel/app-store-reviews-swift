@@ -1,5 +1,8 @@
 import XCTest
 @testable import AppStoreReviews
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 final class DownloaderTests: XCTestCase {
     var sut: Downloader!
