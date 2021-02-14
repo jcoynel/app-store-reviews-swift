@@ -1,10 +1,10 @@
 import Foundation
-import OSLog
+import Logging
 
 extension Feed.Author {
     init?(_ author: DecodableFeed.EntryAuthor) {
         guard let uri = URL(string: author.uri.label) else {
-            Logger().error("Failed to create URL from string: \(author.uri.label)")
+            Logger.asrLogger.error("Failed to create URL from string: \(author.uri.label)")
             return nil
         }
 
@@ -13,7 +13,7 @@ extension Feed.Author {
 
     init?(_ author: DecodableFeed.FeedAuthor) {
         guard let uri = URL(string: author.uri.label) else {
-            Logger().error("Failed to create URL from string: \(author.uri.label)")
+            Logger.asrLogger.error("Failed to create URL from string: \(author.uri.label)")
             return nil
         }
 
@@ -30,7 +30,7 @@ extension Feed.Entry {
               let rating = Int(entry.imRating.label),
               let voteCount = Int(entry.imVoteCount.label),
               let voteSum = Int(entry.imVoteSum.label) else {
-            Logger().error("Failed to convert DecodableFeed.Entry values with ID: \(entry.id.label)")
+            Logger.asrLogger.error("Failed to convert DecodableFeed.Entry values with ID: \(entry.id.label)")
             return nil
         }
 
@@ -54,14 +54,14 @@ extension Feed {
         guard let author = Feed.Author(feed.author),
               let updated = ISO8601DateFormatter().date(from: feed.updated.label),
               let links = Feed.Links(feed.link) else {
-            Logger().error("Failed to convert DecodableFeed.Feed values.")
+            Logger.asrLogger.error("Failed to convert DecodableFeed.Feed values.")
             return nil
         }
 
         guard let currentPage = Page(links.current),
               let firstPage = Page(links.first),
               let lastPage = Page(links.last) else {
-            Logger().error("Failed to generate pages from links.")
+            Logger.asrLogger.error("Failed to generate pages from links.")
             return nil
         }
 

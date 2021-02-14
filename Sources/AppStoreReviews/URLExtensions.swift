@@ -1,5 +1,5 @@
 import Foundation
-import OSLog
+import Logging
 
 extension URL {
     /// Create an App Store reviews page URL for the provided page.
@@ -18,7 +18,7 @@ extension URL {
         ]
 
         guard let url = components.url else {
-            Logger().error("Error creating reviews page URL: failed to get url from components.")
+            Logger.asrLogger.error("Error creating reviews page URL: failed to get url from components.")
             return nil
         }
         self = url

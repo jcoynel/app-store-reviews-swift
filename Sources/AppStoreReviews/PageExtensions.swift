@@ -1,5 +1,5 @@
 import Foundation
-import OSLog
+import Logging
 
 extension Page {
     /// Initialize a Page from a url.
@@ -39,7 +39,7 @@ private extension Page {
     static func pageWithPath(path: String) -> Page? {
         guard let code = path.split(separator: "/").first,
               let territory = Territory(rawValue: code.uppercased()) else {
-            Logger().error("Failed to initialize Territory with code: \(path)")
+            Logger.asrLogger.error("Failed to initialize Territory with code: \(path)")
             return nil
         }
 
