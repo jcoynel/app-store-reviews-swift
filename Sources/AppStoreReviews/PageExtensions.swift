@@ -39,7 +39,6 @@ private extension Page {
     static func pageWithPath(path: String) -> Page? {
         guard let code = path.split(separator: "/").first,
               let territory = Territory(rawValue: code.uppercased()) else {
-            Logger.asrLogger.error("Failed to initialize Territory with code: \(path)")
             return nil
         }
 

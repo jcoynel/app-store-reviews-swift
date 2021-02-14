@@ -8,7 +8,7 @@ import Combine
 
 /// Provides functionality to download App Store reviews data.
 public struct Downloader {
-    typealias Completion = (Result<Feed, Downloader.Error>) -> Void
+    public typealias Completion = (Result<Feed, Downloader.Error>) -> Void
 
     private let urlSession: URLSession
 
@@ -19,12 +19,12 @@ public struct Downloader {
     }
 
     #if canImport(Combine)
-    typealias Publisher = AnyPublisher<Feed, Downloader.Error>
+    public typealias Publisher = AnyPublisher<Feed, Downloader.Error>
 
     /// Fetch the content of the page specified.
     /// - Parameter page: The page to download.
     /// - Returns: A publisher.
-    func fetch(page: Page) -> Publisher {
+    public func fetch(page: Page) -> Publisher {
         guard let url = URL(page) else {
             return Fail<Feed, Downloader.Error>(error: Downloader.Error.invalidURL)
                 .eraseToAnyPublisher()
@@ -45,7 +45,7 @@ public struct Downloader {
     ///   - completion: The completion handler called with a result.
     /// - Returns: The `URLSessionDataTask` created to fetch the content, or `nil` in case of
     /// failure.
-    func fetch(page: Page, completion: @escaping Completion) -> URLSessionDataTask? {
+    public func fetch(page: Page, completion: @escaping Completion) -> URLSessionDataTask? {
         guard let url = URL(page) else {
             completion(.failure(.invalidURL))
             return nil
