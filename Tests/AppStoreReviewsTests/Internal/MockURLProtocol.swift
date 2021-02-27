@@ -7,7 +7,15 @@ import FoundationNetworking
 ///
 /// Reference: [Apple Developer Documentation - URLProtocol](https://developer.apple.com/documentation/foundation/urlprotocol)
 final class MockURLProtocol: URLProtocol {
+    /// Specify mock responses for specific urls.
+    static var mockResponses = [URL: Response?]()
+    /// Specify a mock response for all url calls not included in `mockResponses`.
     static var mockResponse: Response?
+    /// Remove all test data.
+    static func clearTestData() {
+        mockResponse = nil
+        mockResponses.removeAll()
+    }
 
     // MARK: URLProtocol
 
@@ -20,7 +28,14 @@ final class MockURLProtocol: URLProtocol {
     }
 
     override func startLoading() {
-        switch Self.mockResponse {
+        let mockResponse: Response?
+        if let url = request.url, Self.mockResponses.keys.contains(url) {
+            mockResponse = Self.mockResponses[url]?.flatMap { $0 }
+        } else {
+            mockResponse = Self.mockResponse
+        }
+
+        switch mockResponse {
         case .error(let error):
             client?.urlProtocol(self, didFailWithError: error)
             return

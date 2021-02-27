@@ -9,7 +9,7 @@ final class DownloaderTests: XCTestCase {
     var urlSession: URLSession!
 
     override func setUpWithError() throws {
-        MockURLProtocol.mockResponse = .none
+        MockURLProtocol.clearTestData()
 
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [MockURLProtocol.self]
@@ -20,7 +20,7 @@ final class DownloaderTests: XCTestCase {
 
     override func tearDownWithError() throws {
         urlSession.invalidateAndCancel()
-        MockURLProtocol.mockResponse = .none
+        MockURLProtocol.clearTestData()
     }
 
     // MARK: - Fetch with Publisher (Combine)
