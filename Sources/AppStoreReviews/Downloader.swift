@@ -45,7 +45,7 @@ public struct Downloader {
     ///   - completion: The completion handler called with a result.
     /// - Returns: The `URLSessionDataTask` created to fetch the content, or `nil` in case of
     /// failure.
-    public func fetch(page: Page, completion: @escaping Completion) -> URLSessionDataTask? {
+    @discardableResult public func fetch(page: Page, completion: @escaping Completion) -> URLSessionDataTask? {
         guard let url = URL(page) else {
             completion(.failure(.invalidURL))
             return nil
