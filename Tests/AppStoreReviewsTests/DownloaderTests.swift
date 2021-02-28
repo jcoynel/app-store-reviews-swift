@@ -274,6 +274,27 @@ final class DownloaderTests: XCTestCase {
         sub.cancel()
     }
 
+    func test_fetchPublisher_withEmptyPage_returnsValidData() throws {
+        let mockData = try TestData.json(fileName: "empty_page")
+        MockURLProtocol.mockResponse = .HTTPURLResponse(.init(data: mockData))
+
+        var receivedValue: Feed?
+        let exp = expectation(description: "Response error")
+        let sub = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1))
+            .sink { completion in
+                if case .finished = completion {
+                    exp.fulfill()
+                }
+            } receiveValue: { feed in
+                receivedValue = feed
+            }
+
+        waitForExpectations(timeout: 1)
+        XCTAssertNotNil(receivedValue)
+        XCTAssertTrue(receivedValue?.entries.isEmpty ?? false)
+        sub.cancel()
+    }
+
     // MARK: Pages
 
     func test_fetchPublisher_firstPageWithNoNextPage_setsPageProperties() throws {
@@ -581,6 +602,24 @@ final class DownloaderTests: XCTestCase {
         waitForExpectations(timeout: 1)
         XCTAssertNotNil(receivedValue)
         XCTAssertEqual(receivedValue?.entries.count ?? 0, 1)
+        task?.cancel()
+    }
+
+    func test_fetchDataTask_withEmptyPage_returnsValidData() throws {
+        let mockData = try TestData.json(fileName: "empty_page")
+        MockURLProtocol.mockResponse = .HTTPURLResponse(.init(data: mockData))
+
+        var receivedValue: Feed?
+        let exp = expectation(description: "Response error")
+        let task = sut.fetch(page: try Page(appID: 1, territory: .GB, page: 1)) { completion in
+            if case .success(let feed) = completion {
+                receivedValue = feed
+                exp.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+        XCTAssertNotNil(receivedValue)
+        XCTAssertTrue(receivedValue?.entries.isEmpty ?? false)
         task?.cancel()
     }
 }

@@ -1,0 +1,66 @@
+{
+  "feed": {
+	"author": {
+	  "name": {
+		"label": "iTunes Store"
+	  },
+	  "uri": {
+		"label": "http://www.apple.com/uk/itunes/"
+	  }
+	},
+	"updated": {
+	  "label": "2021-02-28T07:35:33-07:00"
+	},
+	"rights": {
+	  "label": "Copyright 2008 Apple Inc."
+	},
+	"title": {
+	  "label": "iTunes Store: Customer Reviews"
+	},
+	"icon": {
+	  "label": "http://itunes.apple.com/favicon.ico"
+	},
+	"link": [
+	  {
+		"attributes": {
+		  "rel": "alternate",
+		  "type": "text/html",
+		  "href": "https://apps.apple.com/WebObjects/MZStore.woa/wa/viewGrouping?cc=cn&id=29099&l=en"
+		}
+	  },
+	  {
+		"attributes": {
+		  "rel": "self",
+		  "href": "https://mzstoreservices-int-st.itunes.apple.com/rss/customerreviews/page=1/id=555731861/sortby=mostrecent/json?l=en&cc=cn"
+		}
+	  },
+	  {
+		"attributes": {
+		  "rel": "first",
+		  "href": ""
+		}
+	  },
+	  {
+		"attributes": {
+		  "rel": "last",
+		  "href": ""
+		}
+	  },
+	  {
+		"attributes": {
+		  "rel": "previous",
+		  "href": ""
+		}
+	  },
+	  {
+		"attributes": {
+		  "rel": "next",
+		  "href": ""
+		}
+	  }
+	],
+	"id": {
+	  "label": "https://mzstoreservices-int-st.itunes.apple.com/rss/customerreviews/page=1/id=555731861/sortby=mostrecent/json?l=en&cc=cn"
+	}
+  }
+}

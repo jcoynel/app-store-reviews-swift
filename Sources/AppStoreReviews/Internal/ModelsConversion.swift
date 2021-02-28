@@ -58,20 +58,31 @@ extension Feed {
             return nil
         }
 
-        guard let currentPage = Page(links.current),
-              let firstPage = Page(links.first),
-              let lastPage = Page(links.last) else {
+        guard let currentPage = Page(links.current) else {
             Logger.asrLogger.error("Failed to generate pages from links.")
             return nil
         }
 
+        var firstPage: Page? = nil
+        if let firstLink = links.first {
+            firstPage = Page(firstLink)
+        }
+        var lastPage: Page? = nil
+        if let lastLink = links.last {
+            lastPage = Page(lastLink)
+        }
+
         var previousPage: Page? = nil
-        if currentPage.page > firstPage.page, let page = try? Page(appID: currentPage.appID, territory: currentPage.territory, page: currentPage.page - 1) {
+        if let firstPage = firstPage,
+           currentPage.page > firstPage.page,
+           let page = try? Page(appID: currentPage.appID, territory: currentPage.territory, page: currentPage.page - 1) {
             previousPage = page
         }
 
         var nextPage: Page? = nil
-        if currentPage.page < lastPage.page, let page = try? Page(appID: currentPage.appID, territory: currentPage.territory, page: currentPage.page + 1) {
+        if let lastPage = lastPage,
+           currentPage.page < lastPage.page,
+           let page = try? Page(appID: currentPage.appID, territory: currentPage.territory, page: currentPage.page + 1) {
             nextPage = page
         }
 
@@ -94,20 +105,16 @@ extension Feed {
 extension Feed.Links {
     init?(_ links: [DecodableFeed.LinkElement]) {
         guard let alternate = links[.alternate],
-              let current = links[.current],
-              let first = links[.first],
-              let last = links[.last],
-              let previous = links[.previous],
-              let next = links[.next] else {
+              let current = links[.current] else {
             return nil
         }
         self.init(
             alternate: alternate,
             current: current,
-            first: first,
-            last: last,
-            previous: previous,
-            next: next
+            first: links[.first],
+            last: links[.last],
+            previous: links[.previous],
+            next: links[.next]
         )
     }
 }

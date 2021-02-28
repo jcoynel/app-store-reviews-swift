@@ -16,10 +16,10 @@ public struct Feed {
 
     /// The current page of the feed.
     public let currentPage: Page
-    /// The first page of the feed.
-    public let firstPage: Page
-    /// The last page of the feed.
-    public let lastPage: Page
+    /// The first page of the feed. `nil` when there are no reviews for the app in a given territory.
+    public let firstPage: Page?
+    /// The last page of the feed. `nil` when there are no reviews for the app in a given territory.
+    public let lastPage: Page?
     /// The previous page of the feed, or `nil` if the current page is the first.
     public let previousPage: Page?
     /// The next page of the feed, or `nil` if the current page is the last.
