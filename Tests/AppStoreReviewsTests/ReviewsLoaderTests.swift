@@ -99,7 +99,7 @@ final class ReviewsLoaderTests: XCTestCase {
             case .success:
                 break
             case .failure(let error):
-                if case .downloaderError = error {
+                if case .feedLoaderError = error {
                     exp.fulfill()
                 }
             }

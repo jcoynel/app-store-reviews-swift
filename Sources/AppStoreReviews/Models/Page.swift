@@ -25,6 +25,7 @@ public struct Page {
 }
 
 extension Page {
+    /// Defines errors that can occur when using `Page`.
     public enum Error: Swift.Error {
         case invalidAppID
         case invalidPageNumber

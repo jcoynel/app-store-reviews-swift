@@ -1,6 +1,7 @@
 import Foundation
 
 extension Feed {
+    /// Representation of a feed entry, i.e. a review.
     public struct Entry {
         /// The author of the entry.
         public let author: Author
@@ -14,10 +15,10 @@ extension Feed {
         public let title: String
         /// The review text of the entry.
         public let description: String
-        
+        /// The number of votes received.
         public let voteCount: Int
+        /// The sum of votes received.
         public let voteSum: Int
-
         /// The territory of the entry.
         public var territory: Territory
         /// The ID of the app.

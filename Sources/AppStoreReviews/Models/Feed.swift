@@ -1,5 +1,6 @@
 import Foundation
 
+/// Representation of the reviews feed.
 public struct Feed {
     /// The author of the feed.
     public let author: Author
@@ -12,8 +13,12 @@ public struct Feed {
     /// The date the feed was last updated.
     public let updated: Date
     /// The links of the feed.
+    ///
+    /// - Note: Each link contains the raw value parsed from the feed. Use `currentPage`,
+    /// `firstPage`, `lastPage`, `previousPage` and `nextPage` for standardised values.
+    ///
+    /// - Important: The url provided by the `Page` entities may not match those from `Links`.
     public let links: Links
-
     /// The current page of the feed.
     public let currentPage: Page
     /// The first page of the feed. `nil` when there are no reviews for the app in a given territory.
@@ -24,7 +29,6 @@ public struct Feed {
     public let previousPage: Page?
     /// The next page of the feed, or `nil` if the current page is the last.
     public let nextPage: Page?
-
     /// The territory of the feed.
     public var territory: Territory { currentPage.territory }
     /// The ID of the app.

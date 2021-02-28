@@ -4,8 +4,8 @@ import XCTest
 import FoundationNetworking
 #endif
 
-final class DownloaderTests: XCTestCase {
-    var sut: Downloader!
+final class FeedLoaderTests: XCTestCase {
+    var sut: FeedLoader!
     var urlSession: URLSession!
 
     override func setUpWithError() throws {
@@ -15,7 +15,7 @@ final class DownloaderTests: XCTestCase {
         config.protocolClasses = [MockURLProtocol.self]
         urlSession = URLSession(configuration: config)
 
-        sut = Downloader(urlSession: urlSession)
+        sut = FeedLoader(urlSession: urlSession)
     }
 
     override func tearDownWithError() throws {

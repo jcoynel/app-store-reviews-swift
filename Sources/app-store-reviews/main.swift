@@ -5,7 +5,7 @@ import ArgumentParser
 struct AppStoreReviewsCommand: ParsableCommand {
     static var configuration = CommandConfiguration(
         commandName: "app-store-reviews",
-        abstract: "Fetch user reviews from the Apple App Stores",
+        abstract: "Fetch user reviews from the Apple App Stores.",
         subcommands: [
             Reviews.self,
             Page.self,

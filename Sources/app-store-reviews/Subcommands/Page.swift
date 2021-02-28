@@ -23,7 +23,7 @@ struct Page: ParsableCommand {
     func run() throws {
         let pageToFetch = try AppStoreReviews.Page(appID: appID, territory: territory, page: page)
 
-        let loader = Downloader()
+        let loader = FeedLoader()
         loader.fetch(page: pageToFetch) { result in
             switch result {
             case .success(let feed):

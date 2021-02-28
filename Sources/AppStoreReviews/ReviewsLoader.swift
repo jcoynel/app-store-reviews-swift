@@ -3,11 +3,15 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// Provides functionality to download all App Store reviews data.
+///
+/// - Note: Use `FeedLoader` instead of `ReviewsLoader` if you want more control, such as
+/// loading a specific reviews page.
 public final class ReviewsLoader {
     public typealias Completion = (Result<[Feed.Entry], ReviewsLoader.Error>) -> Void
 
     private let urlSession: URLSession
-    private let downloader: Downloader
+    private let downloader: FeedLoader
     private var task: URLSessionDataTask?
 
     private var fetchedReviews = [Feed.Entry]()
@@ -16,7 +20,7 @@ public final class ReviewsLoader {
     /// - Parameter urlSession: The URLSession to use to perform downloads.
     public init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession
-        self.downloader = Downloader(urlSession: urlSession)
+        self.downloader = FeedLoader(urlSession: urlSession)
     }
 
     /// Fetch all reviews for the provided appID and territory.
@@ -35,7 +39,7 @@ public final class ReviewsLoader {
     }
 }
 
-// MARK: - Utilities
+// MARK: - Helpers
 
 extension ReviewsLoader {
     private func fetch(page: Page, completion: @escaping Completion) {
@@ -53,7 +57,7 @@ extension ReviewsLoader {
                     completion(.success(self.fetchedReviews))
                 }
             case .failure(let error):
-                completion(.failure(.downloaderError(underlyingError: error)))
+                completion(.failure(.feedLoaderError(underlyingError: error)))
             }
         }
     }
@@ -70,6 +74,6 @@ extension ReviewsLoader {
     /// Defines errors that can occur when using `ReviewsLoader`.
     public enum Error: Swift.Error {
         case generic
-        case downloaderError(underlyingError: Downloader.Error)
+        case feedLoaderError(underlyingError: FeedLoader.Error)
     }
 }

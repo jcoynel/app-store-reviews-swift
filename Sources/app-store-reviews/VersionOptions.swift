@@ -3,7 +3,7 @@ import AppStoreReviews
 
 /// Encapsulates `--version` flag behavior.
 struct VersionOptions: ParsableArguments {
-    @Flag(name: .shortAndLong, help: "Print the version and exit")
+    @Flag(name: .shortAndLong, help: "Print the version and exit.")
     var version: Bool = false
 
     func validate() throws {

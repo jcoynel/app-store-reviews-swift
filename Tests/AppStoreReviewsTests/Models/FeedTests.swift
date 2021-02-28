@@ -37,9 +37,4 @@ final class FeedTests: XCTestCase {
 
         XCTAssertEqual(feed.appID, 1)
     }
-
-    static var allTests = [
-        ("testTerritoryIsDerivedFromCurrentPage", testTerritoryIsDerivedFromCurrentPage),
-        ("testAppIDIsDerivedFromCurrentPage", testAppIDIsDerivedFromCurrentPage),
-    ]
 }

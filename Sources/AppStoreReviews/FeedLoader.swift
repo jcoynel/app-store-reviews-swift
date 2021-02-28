@@ -7,8 +7,10 @@ import Combine
 #endif
 
 /// Provides functionality to download App Store reviews data.
-public struct Downloader {
-    public typealias Completion = (Result<Feed, Downloader.Error>) -> Void
+/// - Note: Use `ReviewsLoader` instead of `FeedLoader` if you only need access to reviews and
+/// do not need other elements of the feed.
+public struct FeedLoader {
+    public typealias Completion = (Result<Feed, FeedLoader.Error>) -> Void
 
     private let urlSession: URLSession
 
@@ -19,14 +21,14 @@ public struct Downloader {
     }
 
     #if canImport(Combine)
-    public typealias Publisher = AnyPublisher<Feed, Downloader.Error>
+    public typealias Publisher = AnyPublisher<Feed, FeedLoader.Error>
 
     /// Fetch the content of the page specified.
     /// - Parameter page: The page to download.
     /// - Returns: A publisher.
     public func fetch(page: Page) -> Publisher {
         guard let url = URL(page) else {
-            return Fail<Feed, Downloader.Error>(error: Downloader.Error.invalidURL)
+            return Fail<Feed, FeedLoader.Error>(error: FeedLoader.Error.invalidURL)
                 .eraseToAnyPublisher()
         }
         return urlSession.dataTaskPublisher(for: url)
@@ -34,7 +36,7 @@ public struct Downloader {
                 try validate(response: output.response)
                 return try decode(feedData: output.data)
             }
-            .mapError { ($0 as? Downloader.Error) ?? .networkError(underlyingError: $0) }
+            .mapError { ($0 as? FeedLoader.Error) ?? .networkError(underlyingError: $0) }
             .eraseToAnyPublisher()
     }
     #endif
@@ -61,7 +63,7 @@ public struct Downloader {
                 let feed = try decode(feedData: data)
                 completion(.success(feed))
             } catch {
-                completion(.failure(error as! Downloader.Error))
+                completion(.failure(error as! FeedLoader.Error))
             }
         }
         task.resume()
@@ -69,36 +71,40 @@ public struct Downloader {
     }
 }
 
-extension Downloader {
+// MARK: - Helpers
+
+extension FeedLoader {
     private func validate(response: URLResponse?) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw Downloader.Error.invalidResponse
+            throw FeedLoader.Error.invalidResponse
         }
         guard httpResponse.statusCode == 200 else {
-            throw Downloader.Error.invalidHTTPResponseStatus(code: httpResponse.statusCode)
+            throw FeedLoader.Error.invalidHTTPResponseStatus(code: httpResponse.statusCode)
         }
     }
 
     private func decode(feedData: Data?) throws -> Feed {
         guard let feedData = feedData else {
-            throw Downloader.Error.invalidResponse
+            throw FeedLoader.Error.invalidResponse
         }
 
         let decodableFeed: DecodableFeed.CustomerReviews
         do {
             decodableFeed = try JSONDecoder().decode(DecodableFeed.CustomerReviews.self, from: feedData)
         } catch {
-            throw Downloader.Error.jsonDecoder(underlyingError: error)
+            throw FeedLoader.Error.jsonDecoder(underlyingError: error)
         }
 
         guard let feed = Feed(decodableFeed.feed) else {
-            throw Downloader.Error.invalidData
+            throw FeedLoader.Error.invalidData
         }
         return feed
     }
 }
 
-extension Downloader {
+// MARK: - Error
+
+extension FeedLoader {
     /// Defines errors that can occur when using `Downloader`.
     public enum Error: Swift.Error {
         case invalidURL
