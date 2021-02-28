@@ -10,9 +10,9 @@ jobs:
     - name: Build & Test
       run: swift test -v --enable-code-coverage
     - name: Report code coverage
-      run: xcrun llvm-cov report .build/debug/AppStoreReviewsPackageTests.xctest/Contents/MacOS/AppStoreReviewsPackageTests -instr-profile .build/debug/codecov/default.profdata
+      run: xcrun llvm-cov report .build/debug/app-store-reviewsPackageTests.xctest/Contents/MacOS/app-store-reviewsPackageTests -instr-profile .build/debug/codecov/default.profdata
     - name: Prepare code coverage
-      run: xcrun llvm-cov export -format="lcov" .build/debug/AppStoreReviewsPackageTests.xctest/Contents/MacOS/AppStoreReviewsPackageTests -instr-profile .build/debug/codecov/default.profdata > info.lcov
+      run: xcrun llvm-cov export -format="lcov" .build/debug/app-store-reviewsPackageTests.xctest/Contents/MacOS/app-store-reviewsPackageTests -instr-profile .build/debug/codecov/default.profdata > info.lcov
     - name: Upload to codecov.io
       run: bash <(curl https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }}
   unit-test-ubuntu:
