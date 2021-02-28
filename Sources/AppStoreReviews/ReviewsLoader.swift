@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public final class ReviewsLoader {
     public typealias Completion = (Result<[Feed.Entry], ReviewsLoader.Error>) -> Void
