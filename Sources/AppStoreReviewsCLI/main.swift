@@ -1,3 +1,0 @@
-import Foundation
-
-Reviews.main()

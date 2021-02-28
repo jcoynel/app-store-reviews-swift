@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "AppStoreReviews",
+    name: "app-store-reviews",
     platforms: [
         .iOS(.v13),
         .macOS(.v10_15),
@@ -15,9 +15,9 @@ let package = Package(
                 "AppStoreReviews",
             ]),
         .executable(
-            name: "AppStoreReviewsCLI",
+            name: "app-store-reviews",
             targets: [
-                "AppStoreReviewsCLI",
+                "app-store-reviews",
             ])
     ],
     dependencies: [
@@ -31,7 +31,7 @@ let package = Package(
                 .product(name: "Logging", package: "swift-log")
             ]),
         .target(
-            name: "AppStoreReviewsCLI",
+            name: "app-store-reviews",
             dependencies: [
                 "AppStoreReviews",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
