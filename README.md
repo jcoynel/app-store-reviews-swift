@@ -1,5 +1,4 @@
 [![Swift 5.3](https://img.shields.io/badge/Swift-5.3-orange.svg?style=flat)](https://swift.org)
-![GitHub top language](https://img.shields.io/github/languages/top/jcoynel/app-store-reviews-swift)
 ![Swift](https://github.com/jcoynel/app-store-reviews-swift/workflows/CI/badge.svg)
 [![codecov](https://codecov.io/gh/jcoynel/app-store-reviews-swift/branch/main/graph/badge.svg?token=VT4I7ZSZWH)](https://codecov.io/gh/jcoynel/app-store-reviews-swift)
 [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
